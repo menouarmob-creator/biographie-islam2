@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumières de l'Islam — Biographies</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c; --gold-light: #e8c97a; --gold-pale: #f5e6b8;
+    --dark: #0d0b07; --dark-mid: #1a1610; --dark-panel: #211e16;
+    --ivory: #f2e8d5; --ivory-dim: #c8b896; --accent-red: #8b2a2a; --text-body: #d4c4a0;
+    --ab: #0e1015; --ap: #161820; --aborder: rgba(100,140,255,0.2);
+    --aaccent: #5b8cff; --adanger: #e05555; --asuccess: #4caf7d;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--dark);color:var(--text-body);font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;line-height:1.7;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(201,168,76,.06) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 80% 90%,rgba(139,42,42,.05) 0%,transparent 60%);pointer-events:none;z-index:0}
+  .page-border{position:fixed;inset:12px;border:1px solid rgba(201,168,76,.15);pointer-events:none;z-index:100}
+
+  /* HEADER */
+  header{position:relative;z-index:10;text-align:center;padding:70px 40px 50px}
+  .header-arabesque{font-family:'Amiri',serif;font-size:clamp(26px,5vw,48px);color:var(--gold);letter-spacing:.15em;margin-bottom:8px;opacity:0;animation:fadeDown 1.2s ease forwards .2s}
+  .header-title{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3.5vw,34px);color:var(--ivory);font-weight:400;letter-spacing:.08em;margin-bottom:12px;opacity:0;animation:fadeDown 1.2s ease forwards .5s}
+  .header-sub{font-style:italic;font-size:clamp(13px,1.8vw,17px);color:var(--ivory-dim);letter-spacing:.2em;text-transform:uppercase;opacity:0;animation:fadeDown 1.2s ease forwards .8s}
+  .header-divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto;max-width:500px;opacity:0;animation:fadeIn 1.5s ease forwards 1s}
+  .header-divider .line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .header-divider .diamond{width:8px;height:8px;background:var(--gold);transform:rotate(45deg)}
+
+  /* ADMIN BUTTON */
+  .admin-access-btn{position:fixed;top:24px;right:30px;z-index:200;background:rgba(13,11,7,.8);border:1px solid rgba(201,168,76,.25);color:var(--ivory-dim);font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all .3s;backdrop-filter:blur(6px)}
+  .admin-access-btn:hover{border-color:var(--gold);color:var(--gold)}
+  .admin-access-btn.admin-active{border-color:var(--aaccent);color:var(--aaccent);background:rgba(91,140,255,.1)}
+
+  /* NAV */
+  nav{position:relative;z-index:10;display:flex;justify-content:center;gap:4px;flex-wrap:wrap;padding:0 40px 44px;opacity:0;animation:fadeUp 1s ease forwards 1.1s}
+  .tab-btn{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--ivory-dim);background:transparent;border:1px solid rgba(201,168,76,.2);padding:10px 24px;cursor:pointer;transition:all .35s;position:relative;overflow:hidden}
+  .tab-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.05));opacity:0;transition:opacity .35s}
+  .tab-btn:hover::before,.tab-btn.active::before{opacity:1}
+  .tab-btn:hover,.tab-btn.active{color:var(--gold-light);border-color:var(--gold)}
+  .tab-btn.active{color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,.1)}
+
+  /* MAIN */
+  main{position:relative;z-index:10;max-width:1300px;margin:0 auto;padding:0 40px 100px}
+  .section{display:none}
+  .section.active{display:block;animation:sectionReveal .6s ease forwards}
+  .section-header{text-align:center;margin-bottom:56px}
+  .section-label{font-family:'Amiri',serif;font-size:30px;color:var(--gold);display:block;margin-bottom:6px}
+  .section-title{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.5vw,24px);color:var(--ivory);font-weight:400;letter-spacing:.1em}
+  .section-line{width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:18px auto 0}
+
+  /* CARDS */
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:28px}
+  .person-card{background:var(--dark-panel);border:1px solid rgba(201,168,76,.18);cursor:pointer;transition:transform .3s,box-shadow .3s,border-color .3s;position:relative;overflow:hidden;animation:cardReveal .5s ease both}
+  .person-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .4s}
+  .person-card:hover::before{transform:scaleX(1)}
+  .person-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.5);border-color:rgba(201,168,76,.4)}
+  .card-banner{height:6px;background:linear-gradient(90deg,var(--accent-red),var(--gold),var(--accent-red))}
+  .card-banner.companion{background:linear-gradient(90deg,#1a3a2a,#4a8c6a,#1a3a2a)}
+  .card-banner.other{background:linear-gradient(90deg,#1a1a3a,#4a4a8c,#1a1a3a)}
+  .card-inner{padding:26px 28px 30px}
+  .card-arabic{font-family:'Amiri',serif;font-size:20px;color:var(--gold);display:block;margin-bottom:4px;direction:rtl}
+  .card-name{font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--ivory);font-weight:400;letter-spacing:.06em;margin-bottom:8px}
+  .card-epithet{font-style:italic;color:var(--gold-pale);font-size:14px;margin-bottom:14px;opacity:.8}
+  .card-dates{display:flex;gap:18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ivory-dim);margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(201,168,76,.1)}
+  .card-dates span{display:flex;align-items:center;gap:5px}
+  .card-dates .dot{width:5px;height:5px;background:var(--gold);border-radius:50%;flex-shrink:0}
+  .card-excerpt{font-size:14px;line-height:1.75;color:var(--text-body);opacity:.85;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .card-read{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid transparent;transition:border-color .3s}
+  .person-card:hover .card-read{border-color:var(--gold)}
+  .card-read::after{content:'→';font-size:15px}
+  .card-admin-btns{display:none;position:absolute;top:10px;right:10px;gap:6px;z-index:10}
+  body.admin-mode .card-admin-btns{display:flex}
+  .card-admin-btns button{font-family:sans-serif;font-size:11px;padding:4px 10px;border:none;cursor:pointer;border-radius:3px;font-weight:600;letter-spacing:.05em}
+  .btn-edit-card{background:var(--aaccent);color:#fff}
+  .btn-delete-card{background:var(--adanger);color:#fff}
+
+  /* BIOGRAPHY MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(8,6,3,.92);z-index:1000;overflow-y:auto;padding:40px 20px;backdrop-filter:blur(6px)}
+  .modal-overlay.open{display:flex;justify-content:center;align-items:flex-start;animation:fadeIn .3s ease}
+  .modal{background:var(--dark-panel);border:1px solid rgba(201,168,76,.25);max-width:800px;width:100%;position:relative;animation:modalReveal .4s ease}
+  .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .modal-header{padding:50px 60px 30px;border-bottom:1px solid rgba(201,168,76,.12);text-align:center}
+  .modal-arabic{font-family:'Amiri',serif;font-size:34px;color:var(--gold);direction:rtl;display:block;margin-bottom:8px}
+  .modal-name{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.5vw,24px);color:var(--ivory);font-weight:400;letter-spacing:.08em;margin-bottom:8px}
+  .modal-epithet{font-style:italic;color:var(--gold-pale);font-size:15px;margin-bottom:18px}
+  .modal-meta{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ivory-dim)}
+  .modal-meta span{display:flex;align-items:center;gap:8px}
+  .modal-meta .gem{width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+  .modal-body{padding:40px 60px 60px;font-size:16px;line-height:1.9}
+  .modal-body h3{font-family:'Cinzel Decorative',serif;font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin:34px 0 12px;display:flex;align-items:center;gap:12px}
+  .modal-body h3::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.4),transparent)}
+  .modal-body p{margin-bottom:14px}
+  .modal-body .highlight{border-left:2px solid var(--gold);padding-left:20px;color:var(--ivory-dim);font-style:italic;margin:22px 0}
+  .modal-close{position:absolute;top:18px;right:22px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--ivory-dim);width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+  .modal-close:hover{border-color:var(--gold);color:var(--gold)}
+
+  /* LOGIN */
+  .login-overlay{display:none;position:fixed;inset:0;background:rgba(5,5,8,.97);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(10px)}
+  .login-overlay.open{display:flex;animation:fadeIn .3s ease}
+  .login-box{background:var(--ap);border:1px solid var(--aborder);padding:50px;max-width:400px;width:90%;text-align:center;position:relative;animation:modalReveal .4s ease}
+  .login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--aaccent),transparent)}
+  .login-icon{font-size:36px;margin-bottom:16px}
+  .login-title{font-family:'Cinzel Decorative',serif;font-size:18px;color:var(--ivory);margin-bottom:6px;letter-spacing:.1em}
+  .login-sub{font-size:13px;color:#666;letter-spacing:.1em;text-transform:uppercase;margin-bottom:32px}
+  .login-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--ivory);font-family:'Cormorant Garamond',serif;font-size:16px;padding:13px 18px;outline:none;margin-bottom:16px;transition:border-color .3s;letter-spacing:.1em}
+  .login-input:focus{border-color:var(--aaccent)}
+  .login-btn{width:100%;background:var(--aaccent);color:#fff;border:none;font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.15em;text-transform:uppercase;padding:13px;cursor:pointer;transition:opacity .3s}
+  .login-btn:hover{opacity:.85}
+  .login-error{color:var(--adanger);font-size:13px;margin-top:12px;display:none}
+  .login-cancel{font-size:12px;color:#555;margin-top:14px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:color .3s;display:block}
+  .login-cancel:hover{color:var(--ivory-dim)}
+
+  /* ADMIN PANEL */
+  .admin-panel{display:none;position:fixed;top:0;right:0;bottom:0;width:480px;background:var(--ab);border-left:1px solid var(--aborder);z-index:500;overflow-y:auto;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+  .admin-panel.open{transform:translateX(0)}
+  body.admin-mode .admin-panel{display:block}
+  .admin-panel-header{padding:24px 28px 20px;border-bottom:1px solid var(--aborder);display:flex;align-items:center;justify-content:space-between;background:var(--ap);position:sticky;top:0;z-index:10}
+  .admin-panel-title{font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--aaccent);letter-spacing:.1em}
+  .admin-logout-btn{font-family:sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:1px solid rgba(224,85,85,.4);color:var(--adanger);padding:6px 14px;cursor:pointer;transition:all .3s}
+  .admin-logout-btn:hover{background:rgba(224,85,85,.1)}
+  .admin-section-tabs{display:flex;border-bottom:1px solid var(--aborder);background:var(--ap)}
+  .admin-tab{flex:1;padding:12px;font-family:sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:none;color:#555;cursor:pointer;transition:all .3s}
+  .admin-tab.active{color:var(--aaccent);border-bottom:2px solid var(--aaccent)}
+  .admin-tab:hover{color:var(--ivory-dim)}
+  .admin-content{padding:24px}
+  .admin-list-item{background:var(--ap);border:1px solid var(--aborder);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .admin-list-info{flex:1;min-width:0}
+  .admin-list-name{font-family:'Cinzel Decorative',serif;font-size:12px;color:var(--ivory);letter-spacing:.06em;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .admin-list-cat{font-size:10px;color:#555;letter-spacing:.1em;text-transform:uppercase}
+  .admin-list-btns{display:flex;gap:6px;flex-shrink:0}
+  .admin-list-btns button{font-family:sans-serif;font-size:10px;padding:5px 10px;border:none;cursor:pointer;border-radius:2px;font-weight:600;letter-spacing:.05em}
+  .btn-edit{background:rgba(91,140,255,.15);color:var(--aaccent);border:1px solid rgba(91,140,255,.3)!important}
+  .btn-edit:hover{background:rgba(91,140,255,.3)}
+  .btn-del{background:rgba(224,85,85,.12);color:var(--adanger);border:1px solid rgba(224,85,85,.25)!important}
+  .btn-del:hover{background:rgba(224,85,85,.25)}
+  .admin-form-title{font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--ivory);letter-spacing:.08em;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--aborder);display:flex;align-items:center;justify-content:space-between}
+  .admin-form-title span{font-size:10px;color:var(--aaccent);letter-spacing:.12em;text-transform:uppercase}
+  .form-group{margin-bottom:16px}
+  .form-label{display:block;font-family:sans-serif;font-size:10px;color:#666;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px}
+  .form-input,.form-select,.form-textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--ivory);font-family:'Cormorant Garamond',serif;font-size:15px;padding:10px 14px;outline:none;transition:border-color .3s;resize:vertical}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--aaccent)}
+  .form-select option{background:#1a1a2e}
+  .form-textarea{min-height:90px}
+  .form-section-label{font-family:sans-serif;font-size:10px;color:var(--aaccent);letter-spacing:.15em;text-transform:uppercase;margin:22px 0 12px;display:flex;align-items:center;gap:10px}
+  .form-section-label::after{content:'';flex:1;height:1px;background:var(--aborder)}
+  .section-block{background:rgba(255,255,255,.02);border:1px solid var(--aborder);padding:14px;margin-bottom:12px;position:relative}
+  .section-block-remove{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--adanger);cursor:pointer;font-size:16px;opacity:.6;transition:opacity .2s}
+  .section-block-remove:hover{opacity:1}
+  .admin-btn-add-section{width:100%;background:transparent;border:1px dashed rgba(91,140,255,.3);color:var(--aaccent);font-family:sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:10px;cursor:pointer;transition:all .3s;margin-bottom:20px}
+  .admin-btn-add-section:hover{background:rgba(91,140,255,.06);border-color:var(--aaccent)}
+  .admin-form-actions{display:flex;gap:10px;margin-top:24px}
+  .admin-save-btn{flex:1;background:var(--aaccent);color:#fff;border:none;font-family:sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px;cursor:pointer;transition:opacity .3s}
+  .admin-save-btn:hover{opacity:.85}
+  .admin-cancel-btn{background:transparent;color:#666;border:1px solid rgba(255,255,255,.1);font-family:sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:12px 20px;cursor:pointer;transition:all .3s}
+  .admin-cancel-btn:hover{color:var(--ivory-dim)}
+  .admin-add-new-btn{width:100%;background:rgba(76,175,125,.12);color:var(--asuccess);border:1px solid rgba(76,175,125,.3);font-family:sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:12px;cursor:pointer;transition:all .3s;margin-bottom:18px}
+  .admin-add-new-btn:hover{background:rgba(76,175,125,.2)}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--ap);border:1px solid var(--asuccess);color:var(--asuccess);font-family:sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:12px 28px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+  .toast.show{opacity:1}
+  .toast.error{border-color:var(--adanger);color:var(--adanger)}
+
+  /* CONFIRM */
+  .confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:3000;justify-content:center;align-items:center}
+  .confirm-overlay.open{display:flex}
+  .confirm-box{background:var(--ap);border:1px solid var(--aborder);padding:36px 40px;max-width:340px;width:90%;text-align:center}
+  .confirm-msg{font-size:16px;color:var(--ivory);margin-bottom:24px;line-height:1.6}
+  .confirm-actions{display:flex;gap:10px}
+  .confirm-yes{flex:1;background:var(--adanger);color:#fff;border:none;padding:11px;font-family:sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+  .confirm-no{flex:1;background:transparent;color:#666;border:1px solid rgba(255,255,255,.1);padding:11px;font-family:sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+  .confirm-no:hover{color:var(--ivory-dim)}
+
+  /* FOOTER */
+  footer{position:relative;z-index:10;text-align:center;padding:36px 40px;border-top:1px solid rgba(201,168,76,.1);color:var(--ivory-dim);font-size:13px;letter-spacing:.1em}
+  footer .footer-arabic{font-family:'Amiri',serif;font-size:20px;color:var(--gold);display:block;margin-bottom:8px;opacity:.7}
+
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes sectionReveal{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes cardReveal{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes modalReveal{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+  @media(max-width:700px){main{padding:0 16px 80px}.modal-header,.modal-body{padding:28px 20px}.cards-grid{grid-template-columns:1fr}nav{padding:0 16px 36px}.page-border{display:none}.admin-panel{width:100%}}
+</style>
+</head>
+<body>
+<div class="page-border"></div>
+<button class="admin-access-btn" id="admin-access-btn" onclick="openLogin()">⚙ Admin</button>
+
+<header>
+  <div class="header-arabesque">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
+  <h1 class="header-title">Lumières de l'Islam</h1>
+  <p class="header-sub">Biographies des Prophètes &amp; Compagnons</p>
+  <div class="header-divider"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
+</header>
+
+<nav>
+  <button class="tab-btn active" onclick="showSection('prophetes',this)">Les Prophètes</button>
+  <button class="tab-btn" onclick="showSection('compagnons',this)">Les Compagnons</button>
+  <button class="tab-btn" onclick="showSection('savants',this)">Les Savants</button>
+</nav>
+
+<main>
+  <section id="prophetes" class="section active">
+    <div class="section-header"><span class="section-label">الأنبياء والرسل</span><h2 class="section-title">Les Prophètes et Messagers</h2><div class="section-line"></div></div>
+    <div class="cards-grid" id="grid-prophetes"></div>
+  </section>
+  <section id="compagnons" class="section">
+    <div class="section-header"><span class="section-label">الصحابة الكرام</span><h2 class="section-title">Les Nobles Compagnons</h2><div class="section-line"></div></div>
+    <div class="cards-grid" id="grid-compagnons"></div>
+  </section>
+  <section id="savants" class="section">
+    <div class="section-header"><span class="section-label">العلماء الأعلام</span><h2 class="section-title">Les Grands Savants</h2><div class="section-line"></div></div>
+    <div class="cards-grid" id="grid-savants"></div>
+  </section>
+</main>
+
+<!-- BIOGRAPHY MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-header" id="modal-header"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <div class="login-title">Accès Administrateur</div>
+    <div class="login-sub">Entrez le mot de passe</div>
+    <input type="password" class="login-input" id="login-pwd" placeholder="Mot de passe..." onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Connexion</button>
+    <div class="login-error" id="login-error">Mot de passe incorrect.</div>
+    <span class="login-cancel" onclick="closeLogin()">Annuler</span>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="admin-panel">
+  <div class="admin-panel-header">
+    <span class="admin-panel-title">⚙ Panneau Admin</span>
+    <button class="admin-logout-btn" onclick="logout()">Déconnexion</button>
+  </div>
+  <div class="admin-section-tabs">
+    <button class="admin-tab active" id="atab-list" onclick="adminTab('list',this)">📋 Fiches</button>
+    <button class="admin-tab" id="atab-add" onclick="adminTab('add',this)">+ Ajouter</button>
+    <button class="admin-tab" id="atab-settings" onclick="adminTab('settings',this)">⚙ Réglages</button>
+  </div>
+  <div class="admin-content" id="admin-content"></div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-msg" id="confirm-msg"></div>
+    <div class="confirm-actions">
+      <button class="confirm-yes" id="confirm-yes">Supprimer</button>
+      <button class="confirm-no" onclick="closeConfirm()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <span class="footer-arabic">﷽</span>
+  <span>Lumières de l'Islam — Que la paix et les bénédictions soient sur tous les prophètes</span>
+</footer>
+
+<script>
+const ADMIN_PASSWORD = "islam2024";
+
+const defaultData = {
+  prophetes:[
+    {id:"p1",arabic:"سيدنا محمد ﷺ",name:"Muhammad",epithet:"Le Sceau des Prophètes — Khatam al-Anbiya",born:"570 ap. J.-C.",died:"632 ap. J.-C.",origin:"La Mecque, Arabie",banner:"prophet",excerpt:"Dernier et plus grand des prophètes, envoyé comme miséricorde pour l'humanité entière. Sa vie fut un modèle de sagesse, de compassion et de foi inébranlable.",sections:[{title:"Naissance et Jeunesse",text:"Muhammad ibn 'Abdillah naquit en l'an 570 de notre ère à La Mecque. Son père mourut avant sa naissance, et il fut confié à une nourrice bédouine, Halima al-Sa'diyya.\n\nOrphelin de mère à six ans, il fut recueilli par son grand-père. Ses compatriotes le surnommaient Al-Amin — le Digne de Confiance.",quote:""},{title:"La Révélation",text:"À quarante ans, lors d'une retraite dans la grotte de Hira, il reçut la première révélation divine par l'ange Jibril. Le premier verset : 'Lis, au nom de ton Seigneur qui a créé.'\n\nPendant vingt-trois ans, la révélation du Coran se poursuivit, guidant la communauté des croyants.",quote:""},{title:"L'Hégire et Médine",text:"Face aux persécutions mecquoises, le Prophète ﷺ émigra à Médine en 622, marquant le début du calendrier islamique. Là, il fonda la première cité-état musulmane.\n\nEn 630, il entra victorieusement à La Mecque dans un geste de clémence sans précédent, pardonnant ses anciens ennemis.",quote:""},{title:"Héritage",text:"Le Prophète ﷺ s'éteignit le 12 Rabi' al-Awwal de l'an 11 H. Son héritage : le Coran, la Sunnah, et une communauté d'un milliard et demi d'âmes.",quote:""}]},
+    {id:"p2",arabic:"سيدنا إبراهيم عليه السلام",name:"Ibrahim (Abraham)",epithet:"Khalilullah — L'Ami Intime d'Allah",born:"~2000 av. J.-C.",died:"~1825 av. J.-C.",origin:"Ur des Chaldéens, Mésopotamie",banner:"prophet",excerpt:"Père des trois monothéismes, Ibrahim brisa les idoles de son peuple et éleva les fondations de la Kaaba avec son fils Ismail.",sections:[{title:"L'Éveil de la Raison",text:"Ibrahim naquit dans une société idolâtre mais rechercha le Créateur dès son jeune âge. Il observa les étoiles, la lune, le soleil — concluant chaque fois : 'Je n'aime pas ceux qui se couchent.'\n\nSon père Azar sculptait des idoles, et Ibrahim lui dit avec fermeté : 'Pourquoi adores-tu ce qui n'entend ni ne voit ?'",quote:""},{title:"L'Épreuve du Feu",text:"Après avoir brisé les idoles, Ibrahim fut jeté dans un bûcher colossal. Allah dit au feu : 'Sois fraîcheur et paix pour Ibrahim.' Le feu obéit.\n\nIbrahim en sortit indemne, affermissant sa foi et bouleversant les témoins.",quote:"Ibrahim dit : 'Je me tourne vers Celui qui a créé les cieux et la terre, en pur monothéiste.'"},{title:"La Kaaba",text:"Sur ordre divin, Ibrahim et Ismail élevèrent ensemble les murs de la Kaaba, priant : 'Notre Seigneur, accepte de nous cet acte.'\n\nCe sanctuaire est encore aujourd'hui le centre de la qibla pour les musulmans du monde entier.",quote:""}]},
+    {id:"p3",arabic:"سيدنا موسى عليه السلام",name:"Musa (Moïse)",epithet:"Kalimullah — Celui à qui Allah parla directement",born:"~1393 av. J.-C.",died:"~1273 av. J.-C.",origin:"Égypte",banner:"prophet",excerpt:"Né au temps où Pharaon massacrait les nouveau-nés, Musa grandit dans le palais de son ennemi avant de devenir le libérateur de son peuple.",sections:[{title:"Une Naissance Miraculeuse",text:"Né sous le règne de Pharaon, la mère de Musa le déposa dans un couffin sur le Nil. La Providence fit en sorte qu'il fut recueilli par la famille de Pharaon, et sa propre mère devint sa nourrice.",quote:""},{title:"La Révélation du Sinaï",text:"Musa vit un feu dans le Sinaï. Il entendit la voix divine : 'Je suis Allah. Jette ton bâton !' Le bâton devint serpent. Sa main ressortit blanche et lumineuse.\n\nCes signes lui permettraient d'affronter Pharaon.",quote:""},{title:"La Traversée de la Mer",text:"Face à l'armée de Pharaon, Musa dit : 'Mon Seigneur est avec moi.' Il frappa la mer — elle s'ouvrit en douze chemins secs entre des murs d'eau.\n\nPharaon s'y engouffra et fut englouti.",quote:""}]},
+    {id:"p4",arabic:"سيدنا عيسى عليه السلام",name:"'Isa (Jésus)",epithet:"Ruhullah — L'Esprit d'Allah",born:"~4 av. J.-C.",died:"Élevé vivant vers le Ciel",origin:"Bethléem, Palestine",banner:"prophet",excerpt:"Né miraculeusement de la vierge Maryam, 'Isa parla depuis son berceau, guérit les malades et ressuscita les morts avec la permission d'Allah.",sections:[{title:"La Naissance Virginale",text:"L'ange Jibril annonça à Maryam un fils. Elle demanda : 'Comment aurais-je un fils sans qu'un homme m'ait touchée ?' L'ange répondit : 'Ainsi soit-il — Allah crée ce qu'Il veut.'\n\nL'enfant 'Isa naquit et ses premières paroles furent : 'Je suis le serviteur d'Allah.'",quote:""},{title:"Les Miracles",text:"'Isa guérit les aveugles et les lépreux avec la permission d'Allah. Il insuffla la vie dans des oiseaux d'argile. Il ressuscita des morts.\n\nIl annonça la venue d'un prophète après lui nommé Ahmed.",quote:""},{title:"L'Élévation et le Retour",text:"Quand les ennemis complotèrent, Allah éleva 'Isa vivant vers Lui. Le Coran affirme qu'il ne fut ni tué ni crucifié.\n\n'Isa reviendra avant la fin des temps pour faire régner la justice sur terre.",quote:""}]}
+  ],
+  compagnons:[
+    {id:"c1",arabic:"أبو بكر الصديق رضي الله عنه",name:"Abu Bakr al-Siddiq",epithet:"Al-Siddiq — Le Véridique, Premier Calife",born:"573 ap. J.-C.",died:"634 ap. J.-C.",origin:"La Mecque",banner:"companion",excerpt:"Premier homme libre à embrasser l'Islam, ami indéfectible du Prophète ﷺ. Il devint le premier calife et préserva l'unité de l'Islam.",sections:[{title:"Une Amitié Légendaire",text:"Abu Bakr était le plus proche ami du Prophète ﷺ. Il accepta l'Islam immédiatement, sans hésitation — d'où son titre Al-Siddiq, le Véridique.\n\nIl dépensa sa fortune pour libérer des esclaves torturés pour leur foi, dont Bilal ibn Rabah.",quote:""},{title:"L'Hégire",text:"Abu Bakr accompagna le Prophète ﷺ dans l'émigration vers Médine. Cachés dans la grotte de Thawr, Abu Bakr tremblait pour le Prophète.\n\nLe Coran immortalisa ce moment : 'Il dit à son compagnon : Ne t'afflige pas, Allah est avec nous.'",quote:""},{title:"Le Califat",text:"À la mort du Prophète ﷺ, Abu Bakr rassembla les foules : 'Quiconque adorait Muhammad sache qu'il est mort. Quiconque adore Allah sache qu'Allah ne meurt pas.'\n\nIl préserva le texte coranique en un recueil unique.",quote:""}]},
+    {id:"c2",arabic:"عمر بن الخطاب رضي الله عنه",name:"'Umar ibn al-Khattab",epithet:"Al-Faruq — Celui qui sépare le Vrai du Faux",born:"584 ap. J.-C.",died:"644 ap. J.-C.",origin:"La Mecque",banner:"companion",excerpt:"Sa conversion fut un tournant dans l'histoire de l'Islam. Deuxième calife, il développa l'empire islamique et fut un modèle de justice.",sections:[{title:"La Conversion",text:"Avant sa conversion, 'Umar était l'un des plus féroces opposants à l'Islam. En route pour tuer le Prophète ﷺ, il découvrit que sa sœur s'était convertie.\n\nIl lut des versets coraniques — ces mots traversèrent son cœur. Il se rendit aux pieds du Prophète ﷺ et prononça la shahada.",quote:""},{title:"Le Grand Calife",text:"Sous le califat d'Umar (634-644), l'empire s'étendit de la Perse à l'Égypte. Il vivait avec une austérité remarquable : une robe rapiécée, des promenades nocturnes incognito.\n\nIl instaura le trésor public pour redistribuer les richesses aux pauvres.",quote:"'Umar dit : 'Si un mulet trébuche en Irak, je crains de devoir en répondre devant Allah.'"},{title:"Jérusalem",text:"Quand Jérusalem se rendit, 'Umar entra à pied, refusant le faste, tenant lui-même la bride de son chameau en alternance avec son serviteur.\n\nSa charte garantit la sécurité de toutes les communautés religieuses.",quote:""}]},
+    {id:"c3",arabic:"فاطمة الزهراء رضي الله عنها",name:"Fatima al-Zahra",epithet:"Sayyidat Nisa al-'Alamin — Maîtresse des Femmes des Mondes",born:"~605 ap. J.-C.",died:"~632 ap. J.-C.",origin:"La Mecque",banner:"companion",excerpt:"Fille bien-aimée du Prophète ﷺ, épouse d'Ali ibn Abi Talib, mère de Hasan et Husayn. Sa vie fut un exemple de piété inégalé.",sections:[{title:"La Fille du Prophète",text:"Fatima était la plus jeune fille du Prophète ﷺ et de Khadijah. Elle fut son soutien affectif pendant les dures persécutions mecquoises.\n\nSon père l'appelait 'Al-Zahra' et dit : 'Fatima est une partie de moi.'",quote:""},{title:"Épouse et Mère",text:"Elle épousa 'Ali ibn Abi Talib. Leur vie fut simple mais riche spirituellement. Elle moulait la farine, portait l'eau, balayait la maison.\n\nElle fut la mère de Hasan, Husayn, Zaynab et Umm Kulthum.",quote:""},{title:"Après le Prophète",text:"À la mort du Prophète ﷺ, Fatima fut inconsolable. Elle mourut six mois après lui, à environ 27 ans.\n\nLe Prophète lui avait dit en secret : 'Tu seras la première de ma famille à me rejoindre.' Elle sourit alors pour la première fois.",quote:""}]},
+    {id:"c4",arabic:"بلال بن رباح رضي الله عنه",name:"Bilal ibn Rabah",epithet:"Sayyid al-Mu'adhdhinin — Maître des Muezzins",born:"~580 ap. J.-C.",died:"~641 ap. J.-C.",origin:"La Mecque (d'origine éthiopienne)",banner:"companion",excerpt:"Esclave éthiopien torturé pour sa foi, sa résistance 'Ahad, Ahad !' est le symbole éternel de la dignité face à l'oppression.",sections:[{title:"Ahad, Ahad !",text:"Bilal était esclave d'Umayya ibn Khalaf. Quand il se convertit, son maître le torturait sur le sable brûlant avec des rochers sur la poitrine. Bilal répétait : 'Ahad, Ahad !' — Un seul, Un seul !\n\nAbu Bakr racheta sa liberté et la lui offrit.",quote:""},{title:"La Voix de l'Aube",text:"Le Prophète ﷺ confia à Bilal l'honneur d'être le premier muezzin de l'Islam. Sa voix grave résonna depuis les hauteurs de Médine.\n\nAprès la mort du Prophète ﷺ, Bilal ne put plus appeler — sa voix brisait au mot 'Muhammad rasulullah', submergé par le deuil.",quote:""},{title:"Héritage",text:"Bilal incarne l'abolition de toute hiérarchie raciale dans l'Islam. Le Prophète ﷺ dit : 'La supériorité ne s'acquiert que par la piété.'\n\nBilal en fut le symbole vivant — d'origine servile et africaine, il marcha parmi les plus respectés compagnons.",quote:""}]}
+  ],
+  savants:[
+    {id:"s1",arabic:"الإمام البخاري رحمه الله",name:"Imam al-Bukhari",epithet:"Amir al-Mu'minin fil-Hadith — Prince des Croyants dans le Hadith",born:"810 ap. J.-C.",died:"870 ap. J.-C.",origin:"Boukhara (Ouzbékistan actuel)",banner:"other",excerpt:"Auteur du Sahih al-Bukhari, le livre le plus authentique après le Coran. Il parcourut des milliers de kilomètres pour vérifier chaque hadith.",sections:[{title:"Une Mémoire Prodigieuse",text:"Muhammad ibn Ismail al-Bukhari naquit à Boukhara en 810. À dix ans, il avait mémorisé des milliers de hadiths. Des savants de Bagdad lui présentèrent 100 hadiths falsifiés — il les rectifia tous de mémoire.\n\nÀ seize ans, il partait en pèlerinage et restait pour apprendre.",quote:""},{title:"Le Sahih",text:"Al-Bukhari parcourut plus de 100 000 km. Il collecta 600 000 hadiths et n'en retint que 7 275 après vérification rigoureuse.\n\nAvant chaque hadith, il faisait une ablution et priait deux raka'at.",quote:""},{title:"L'Exil et la Mort",text:"Vers la fin de sa vie, al-Bukhari fut exilé. Il mourut en 870 à Khartank, près de Samarcande.\n\nSes derniers mots : 'Ô Allah, la terre s'est rétrécie pour moi. Prends-moi vers Toi.' Il mourut cette nuit-là.",quote:""}]},
+    {id:"s2",arabic:"ابن سينا رحمه الله",name:"Ibn Sina (Avicenne)",epithet:"Al-Sheikh al-Ra'is — Le Maître Prince des Savants",born:"980 ap. J.-C.",died:"1037 ap. J.-C.",origin:"Afshana, près de Boukhara",banner:"other",excerpt:"Médecin, philosophe et scientifique universel. Son Canon de la Médecine fut le manuel des facultés de médecine européennes pendant six siècles.",sections:[{title:"L'Enfant Prodige",text:"Ibn Sina mémorisa le Coran à dix ans. À seize ans, il surpassait ses maîtres en médecine. À dix-huit ans, il guérit le sultan Nuh II — en récompense, il accéda à la bibliothèque royale.\n\nIl dit : 'J'ai lu tout ce qu'elle contenait.'",quote:""},{title:"Le Canon de la Médecine",text:"Le Qanun fi al-Tibb synthétise les savoirs grecs, arabes et indiens en cinq volumes. Il traite des maladies infectieuses, de la neurologie, de la psychiatrie.\n\nTraduit en latin, il fut utilisé dans les universités européennes jusqu'au XVIIe siècle.",quote:""},{title:"Philosophe et Mystique",text:"Ibn Sina composa aussi des traités de logique, métaphysique, mathématiques, astronomie et poésie.\n\nSon 'Ode à l'Âme' est une méditation mystique d'une beauté saisissante sur l'âme qui aspire à rejoindre son origine divine.",quote:""}]}
+  ]
+};
+
+let data = JSON.parse(JSON.stringify(defaultData));
+let isAdmin = false;
+let currentAdminTab = 'list';
+let editingItem = null;
+let confirmCb = null;
+let toastTimer;
+
+function saveData(){ try{localStorage.setItem('islamData',JSON.stringify(data))}catch(e){} }
+function loadData(){ try{const s=localStorage.getItem('islamData');if(s)data=JSON.parse(s)}catch(e){} }
+function genId(){ return Date.now().toString(36)+Math.random().toString(36).substr(2,5) }
+function esc(s){ return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+// RENDER CARDS
+function renderCards(cat){
+  const grid=document.getElementById('grid-'+cat);
+  if(!grid)return;
+  grid.innerHTML='';
+  data[cat].forEach((p,i)=>{
+    const card=document.createElement('div');
+    card.className='person-card';
+    const bc=p.banner==='companion'?'companion':p.banner==='other'?'other':'';
+    card.innerHTML=`
+      <div class="card-banner ${bc}"></div>
+      <div class="card-inner">
+        <span class="card-arabic">${p.arabic}</span>
+        <div class="card-name">${p.name}</div>
+        <div class="card-epithet">${p.epithet}</div>
+        <div class="card-dates"><span><span class="dot"></span>Naissance: ${p.born}</span><span><span class="dot"></span>Décès: ${p.died}</span></div>
+        <p class="card-excerpt">${p.excerpt}</p>
+        <span class="card-read">Lire la biographie</span>
+      </div>
+      <div class="card-admin-btns">
+        <button class="btn-edit-card" onclick="event.stopPropagation();editCard('${cat}','${p.id}')">✏ Modifier</button>
+        <button class="btn-delete-card" onclick="event.stopPropagation();deleteCard('${cat}','${p.id}')">✕ Supprimer</button>
+      </div>`;
+    card.onclick=()=>openBio(cat,i);
+    grid.appendChild(card);
+  });
+}
+function renderAll(){ renderCards('prophetes');renderCards('compagnons');renderCards('savants') }
+
+// NAV TABS
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+// BIOGRAPHY MODAL
+function openBio(cat,idx){
+  const p=data[cat][idx];
+  document.getElementById('modal-header').innerHTML=`
+    <span class="modal-arabic">${p.arabic}</span>
+    <div class="modal-name">${p.name}</div>
+    <div class="modal-epithet">${p.epithet}</div>
+    <div class="modal-meta">
+      <span><span class="gem"></span>Naissance : ${p.born}</span>
+      <span><span class="gem"></span>Décès : ${p.died}</span>
+      <span><span class="gem"></span>Origine : ${p.origin}</span>
+    </div>`;
+  let bh='';
+  (p.sections||[]).forEach(s=>{
+    bh+=`<h3>${s.title}</h3><p>${(s.text||'').replace(/\n\n/g,'</p><p>')}</p>`;
+    if(s.quote)bh+=`<div class="highlight">${s.quote}</div>`;
+  });
+  document.getElementById('modal-body').innerHTML=bh;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){ if(e.target===document.getElementById('modal-overlay'))closeModalDirect() }
+function closeModalDirect(){ document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow='' }
+
+// LOGIN
+function openLogin(){ if(isAdmin){document.getElementById('admin-panel').classList.toggle('open');return} document.getElementById('login-overlay').classList.add('open');setTimeout(()=>document.getElementById('login-pwd').focus(),200) }
+function closeLogin(){ document.getElementById('login-overlay').classList.remove('open');document.getElementById('login-pwd').value='';document.getElementById('login-error').style.display='none' }
+function doLogin(){
+  if(document.getElementById('login-pwd').value===ADMIN_PASSWORD){
+    isAdmin=true;closeLogin();
+    document.body.classList.add('admin-mode');
+    document.getElementById('admin-access-btn').classList.add('admin-active');
+    document.getElementById('admin-access-btn').textContent='⚙ Admin ●';
+    setTimeout(()=>{document.getElementById('admin-panel').classList.add('open');renderAdminContent()},50);
+    showToast('Connecté en tant qu\'administrateur');
+  } else {
+    document.getElementById('login-error').style.display='block';
+    document.getElementById('login-pwd').value='';
+    document.getElementById('login-pwd').focus();
+  }
+}
+function logout(){
+  isAdmin=false;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('admin-access-btn').classList.remove('admin-active');
+  document.getElementById('admin-access-btn').textContent='⚙ Admin';
+  document.getElementById('admin-panel').classList.remove('open');
+  showToast('Déconnecté');
+}
+
+// ADMIN PANEL
+function adminTab(tab,btn){
+  currentAdminTab=tab;editingItem=null;
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderAdminContent();
+}
+function renderAdminContent(){
+  const c=document.getElementById('admin-content');
+  if(currentAdminTab==='list')renderList(c);
+  else if(currentAdminTab==='add')renderForm(c);
+  else renderSettings(c);
+}
+
+function renderList(c){
+  const catLabel={prophetes:'🕌 Prophètes',compagnons:'⭐ Compagnons',savants:'📚 Savants'};
+  let h=`<button class="admin-add-new-btn" onclick="switchToAdd()">+ Ajouter une nouvelle fiche</button>`;
+  ['prophetes','compagnons','savants'].forEach(cat=>{
+    h+=`<div class="form-section-label">${catLabel[cat]}</div>`;
+    data[cat].forEach(p=>{
+      h+=`<div class="admin-list-item">
+        <div class="admin-list-info">
+          <div class="admin-list-name">${p.name}</div>
+          <div class="admin-list-cat">${p.epithet.slice(0,45)}...</div>
+        </div>
+        <div class="admin-list-btns">
+          <button class="btn-edit" onclick="editCard('${cat}','${p.id}')">✏</button>
+          <button class="btn-del" onclick="deleteCard('${cat}','${p.id}')">✕</button>
+        </div>
+      </div>`;
+    });
+  });
+  c.innerHTML=h;
+}
+
+function switchToAdd(){
+  currentAdminTab='add';editingItem=null;
+  document.querySelectorAll('.admin-tab').forEach((b,i)=>b.classList.toggle('active',i===1));
+  renderAdminContent();
+}
+
+function editCard(cat,id){
+  editingItem={cat,id};currentAdminTab='add';
+  document.querySelectorAll('.admin-tab').forEach((b,i)=>b.classList.toggle('active',i===1));
+  renderAdminContent();
+  document.getElementById('admin-panel').classList.add('open');
+}
+
+function deleteCard(cat,id){
+  const p=data[cat].find(x=>x.id===id);
+  showConfirm(`Supprimer la fiche de <strong>${p?p.name:'cette personne'}</strong> ?`,()=>{
+    data[cat]=data[cat].filter(x=>x.id!==id);
+    saveData();renderAll();renderAdminContent();
+    showToast('Fiche supprimée');
+  });
+}
+
+function renderForm(c){
+  let item=null,editCat='prophetes';
+  if(editingItem){
+    editCat=editingItem.cat;
+    item=data[editCat].find(x=>x.id===editingItem.id);
+  }
+  const secs=item?item.sections:[{title:'',text:'',quote:''}];
+  let sh='';
+  secs.forEach((s,i)=>{ sh+=secBlock(s,i) });
+  c.innerHTML=`
+    <div class="admin-form-title">${item?'Modifier la fiche':'Nouvelle fiche'}<span>${item?item.name:'Nouveau'}</span></div>
+    <div class="form-group"><label class="form-label">Catégorie</label>
+      <select class="form-select" id="f-cat">
+        <option value="prophetes" ${editCat==='prophetes'?'selected':''}>Prophètes</option>
+        <option value="compagnons" ${editCat==='compagnons'?'selected':''}>Compagnons</option>
+        <option value="savants" ${editCat==='savants'?'selected':''}>Savants</option>
+      </select></div>
+    <div class="form-group"><label class="form-label">Nom (français)</label><input class="form-input" id="f-name" value="${esc(item?item.name:'')}" placeholder="ex: Ibrahim"></div>
+    <div class="form-group"><label class="form-label">Nom en arabe</label><input class="form-input" id="f-arabic" value="${esc(item?item.arabic:'')}" placeholder="سيدنا ..."></div>
+    <div class="form-group"><label class="form-label">Surnom / Titre</label><input class="form-input" id="f-epithet" value="${esc(item?item.epithet:'')}" placeholder="ex: Al-Siddiq — Le Véridique"></div>
+    <div class="form-group"><label class="form-label">Date de naissance</label><input class="form-input" id="f-born" value="${esc(item?item.born:'')}" placeholder="ex: 570 ap. J.-C."></div>
+    <div class="form-group"><label class="form-label">Date de décès</label><input class="form-input" id="f-died" value="${esc(item?item.died:'')}" placeholder="ex: 632 ap. J.-C."></div>
+    <div class="form-group"><label class="form-label">Origine</label><input class="form-input" id="f-origin" value="${esc(item?item.origin:'')}" placeholder="ex: La Mecque, Arabie"></div>
+    <div class="form-group"><label class="form-label">Couleur de la bannière</label>
+      <select class="form-select" id="f-banner">
+        <option value="prophet" ${(item&&item.banner==='prophet')?'selected':''}>Prophète (rouge/or)</option>
+        <option value="companion" ${(item&&item.banner==='companion')?'selected':''}>Compagnon (vert)</option>
+        <option value="other" ${(item&&item.banner==='other')?'selected':''}>Savant (bleu)</option>
+      </select></div>
+    <div class="form-group"><label class="form-label">Résumé court (carte)</label><textarea class="form-textarea" id="f-excerpt" rows="3">${esc(item?item.excerpt:'')}</textarea></div>
+    <div class="form-section-label">Chapitres de la biographie</div>
+    <div id="secs-container">${sh}</div>
+    <button type="button" class="admin-btn-add-section" onclick="addSec()">+ Ajouter un chapitre</button>
+    <div class="admin-form-actions">
+      <button class="admin-save-btn" onclick="saveForm()">💾 Enregistrer</button>
+      <button class="admin-cancel-btn" onclick="adminTab('list',document.getElementById('atab-list'))">Annuler</button>
+    </div>`;
+}
+
+function secBlock(s,i){
+  return `<div class="section-block" id="sb-${i}">
+    <button type="button" class="section-block-remove" onclick="this.parentElement.remove()">✕</button>
+    <div class="form-group"><label class="form-label">Titre</label><input class="form-input st" value="${esc(s.title)}" placeholder="Titre du chapitre"></div>
+    <div class="form-group"><label class="form-label">Texte (double saut = nouveau §)</label><textarea class="form-textarea sx" rows="5" placeholder="Biographie...">${esc(s.text)}</textarea></div>
+    <div class="form-group"><label class="form-label">Citation (optionnel)</label><input class="form-input sq" value="${esc(s.quote||'')}" placeholder="Citation..."></div>
+  </div>`;
+}
+
+function addSec(){
+  const n=document.getElementById('secs-container');
+  const idx=n.querySelectorAll('.section-block').length;
+  const d=document.createElement('div');
+  d.innerHTML=secBlock({title:'',text:'',quote:''},idx);
+  n.appendChild(d.firstElementChild);
+}
+
+function getSecs(){
+  return Array.from(document.querySelectorAll('#secs-container .section-block')).map(b=>({
+    title:b.querySelector('.st').value,
+    text:b.querySelector('.sx').value,
+    quote:b.querySelector('.sq').value
+  }));
+}
+
+function saveForm(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){showToast('Le nom est obligatoire',true);return}
+  const cat=document.getElementById('f-cat').value;
+  const person={
+    id:editingItem?editingItem.id:genId(),
+    arabic:document.getElementById('f-arabic').value,
+    name,
+    epithet:document.getElementById('f-epithet').value,
+    born:document.getElementById('f-born').value,
+    died:document.getElementById('f-died').value,
+    origin:document.getElementById('f-origin').value,
+    banner:document.getElementById('f-banner').value,
+    excerpt:document.getElementById('f-excerpt').value,
+    sections:getSecs()
+  };
+  if(editingItem){
+    const oldCat=editingItem.cat;
+    if(oldCat!==cat){ data[oldCat]=data[oldCat].filter(x=>x.id!==editingItem.id);data[cat].push(person) }
+    else { const idx=data[cat].findIndex(x=>x.id===editingItem.id);if(idx!==-1)data[cat][idx]=person }
+  } else { data[cat].push(person) }
+  saveData();renderAll();
+  editingItem=null;
+  adminTab('list',document.getElementById('atab-list'));
+  showToast(editingItem?'Fiche mise à jour !':'Fiche ajoutée !');
+}
+
+function renderSettings(c){
+  c.innerHTML=`
+    <div class="form-section-label">Mot de passe</div>
+    <p style="font-size:13px;color:#555;margin-bottom:16px;font-family:sans-serif;line-height:1.6">Le mot de passe est défini dans le code. Cherchez <code style="color:var(--aaccent)">ADMIN_PASSWORD</code> et changez sa valeur.</p>
+    <div class="form-section-label">Réinitialisation</div>
+    <button onclick="resetData()" style="width:100%;background:rgba(224,85,85,.12);color:var(--adanger);border:1px solid rgba(224,85,85,.3);font-family:sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:12px;cursor:pointer;margin-bottom:10px;">⚠ Réinitialiser toutes les données</button>
+    <p style="font-size:11px;color:#444;font-family:sans-serif;text-align:center">Restaure les biographies par défaut.</p>`;
+}
+
+function resetData(){
+  showConfirm('Réinitialiser toutes les données ? Cela effacera vos modifications.',()=>{
+    data=JSON.parse(JSON.stringify(defaultData));
+    saveData();renderAll();renderAdminContent();
+    showToast('Données réinitialisées');
+  });
+}
+
+// TOAST
+function showToast(msg,isErr=false){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(isErr?' error':'');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// CONFIRM
+function showConfirm(msg,cb){
+  document.getElementById('confirm-msg').innerHTML=msg;
+  document.getElementById('confirm-overlay').classList.add('open');
+  confirmCb=cb;
+  document.getElementById('confirm-yes').onclick=()=>{closeConfirm();if(confirmCb)confirmCb()};
+}
+function closeConfirm(){ document.getElementById('confirm-overlay').classList.remove('open') }
+
+// INIT
+loadData();renderAll();
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModalDirect();closeLogin();closeConfirm()}});
+</script>
+</body>
+</html>
